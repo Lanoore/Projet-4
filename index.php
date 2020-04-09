@@ -3,10 +3,17 @@
 	try{
 		if (isset($_GET['action'])) {
 
-			throw new Exception('Aucune action');	
+			if ($_GET['action'] == 'post') {
+				if(isset($_GET['id']) && $_GET['id']> 0){
+					afficheArticle();
+				}
+				else{
+					throw new Exception('Aucun id de billet envoyé');
+				}
+			}
 		}
 		else{
-			afficheAccueil();
+			afficheListArticles();
 		}
 	}
 	catch(Exception $e){
