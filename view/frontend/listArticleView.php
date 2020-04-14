@@ -11,7 +11,7 @@
 				<p><?= $article['description']?></p>
 				<p>
 				<?= $article['date_creation']?>
-				<a href="index.php?action=post&id=<?=$article['id']?>">Affichez l'article</a>
+				<a href="index.php?action=article&id=<?=$article['id']?>">Affichez l'article</a>
 				</p>
 			</div>
 		<?php	
