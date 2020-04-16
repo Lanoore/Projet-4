@@ -31,6 +31,29 @@
 					throw new Exception('Aucun identifiant de billet envoyé');
 				}
 			}
+			elseif($_GET['action'] == 'admin'){
+				accueilAdmin();
+			}
+			elseif($_GET['action'] == 'connectAdmin'){
+				if(!empty($_POST['identifiant']) && !empty($_POST['password'])){
+					if(!preg_match("#[<>]#", $_POST['identifiant']) && !preg_match("#[<>]#",$_POST['password'])){
+						connectAdmin($_POST['identifiant'], $_POST['password']);
+					}
+					else{
+						throw new Exception('Rentrer un identifiant et un mot de passe valide');
+					}
+				}
+				else{
+					throw new Exception('Tous les champs ne sont pas remplis');
+				}
+				
+			}
+			elseif($_GET['action'] == 'adminGestionView'){
+				afficheGestionAdmin();
+			}
+			else{
+				afficheListArticles();
+			}
 		}
 		else{
 			afficheListArticles();

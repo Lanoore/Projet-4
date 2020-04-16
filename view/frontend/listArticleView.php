@@ -1,5 +1,5 @@
+<?php session_start();?>
 <?php $title = 'Accueil' ?>
-<?php $css ='<link href\'public/css/style.css\' rel=stylesheet' ?>
 <?php ob_start(); ?>
 		<h1>Bienvenue sur mon blog</h1>
 		<?php

@@ -13,7 +13,7 @@ class CommentManager extends Manager{
 
 	public function addComment($articleId, $auteur, $comment){
 		$db= $this->dbConnect();
-		$comments =$db->prepare('INSERT INTO commentaire(id_article, auteur, commentaire ,date_commentaire) VALUES(?,?,?,NOW())');
+		$comments = $db->prepare('INSERT INTO commentaire(id_article, auteur, commentaire ,date_commentaire) VALUES(?,?,?,NOW())');
 		$confirmCommentAdd = $comments->execute(array($articleId, $auteur, $comment));
 
 		return $confirmCommentAdd;

@@ -1,5 +1,4 @@
 <?php $title = 'Article'?>
-<?php $css = '<link href\'public/css/style.css\' rel=stylesheet' ?>
 <?php ob_start();?>
 	<div>
 		<h3><?=$article['titre']?></h3>
