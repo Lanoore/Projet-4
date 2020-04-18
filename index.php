@@ -31,6 +31,14 @@
 					throw new Exception('Aucun identifiant de billet envoyé');
 				}
 			}
+			elseif($_GET['action'] == 'addSignale'){
+				if(isset($_GET['id_commentaire'])&& $_GET['id_commentaire'] > 0 && isset($_GET['id_article'])&& $_GET['id_article']>0){
+					addSignaleCommentaire($_GET['id_commentaire'], $_GET['id_article']);
+				}
+				else{
+					throw new Exception('Un id de commentaire ainsi qu\'un id d\'article est requis ou est incorrect');
+				}
+			}
 			elseif($_GET['action'] == 'admin'){
 				accueilAdmin();
 			}
@@ -50,6 +58,14 @@
 			}
 			elseif($_GET['action'] == 'adminGestionView'){
 				afficheGestionAdmin();
+			}
+			elseif($_GET['action'] == 'verifSignaleComment'){
+				if(isset($_POST['Valider'])){
+					verifComment($_GET['id_commentaire'], 1);
+				}
+				elseif(isset($_POST['Supprimer'])){
+					verifComment($_GET['id_commentaire'], 0);
+				}
 			}
 			else{
 				afficheListArticles();

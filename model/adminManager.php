@@ -17,4 +17,19 @@ class GestionAdmin extends Manager{
 		return $commentsAdmin;
 	}
 
+	public function addCommentVerif($signale, $id_commentaire){
+		$db = $this->dbConnect();
+		$confirmVerifComment = $db->prepare('UPDATE commentaire SET signale = ? WHERE id = ?');
+		$confirmVerifComment->execute(array($signale ,$id_commentaire));
+		
+		return $confirmVerifComment;
+
+	}
+
+	public function supprComment($id_commentaire){
+		$db = $this->dbConnect();
+		$confirmSupprComment = $db->prepare('DELETE FROM commentaire WHERE id= ?');
+		$confirmSupprComment->execute(array($id_commentaire));
+	}
+
 }

@@ -29,7 +29,7 @@ session_start();?>
                     <td><?=$commentAdmin['date_commentaire']?></td>
 
                     <?php if($commentAdmin['signale']=== NULL){?>
-                        <td>Non signalé</td>
+                        <td>Non signalé <form action="index.php?action=verifSignaleComment&id_commentaire=<?=$commentAdmin['id']?>" method="post"><input type="submit" name="Valider" value="Valider"></input><input type="submit" name="Supprimer" value="Supprimer"></input></form></td>
                     <?php
 					}
                     elseif($commentAdmin['signale'] == 0){?>

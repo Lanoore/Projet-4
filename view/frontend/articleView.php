@@ -1,4 +1,4 @@
-<?php $title = 'Article'?>
+﻿<?php $title = 'Article'?>
 <?php ob_start();?>
 	<div>
 		<h3><?=$article['titre']?></h3>
@@ -25,6 +25,12 @@
 		?>
 			<p><?=$comment['auteur']?> le <?= $comment['date_commentaire']?></p>
 			<p><?=$comment['commentaire']?></p>
+			<?php
+			if($comment['signale'] == NULL){?>
+				<form action="index.php?action=addSignale&amp;id_commentaire=<?=$comment['id']?>&id_article=<?=$article['id']?>" method="post"><input type='submit' value="Signaler le commentaire"></input></form>
+			<?php
+			}	
+			?>
 		<?php
 		}
 	?>

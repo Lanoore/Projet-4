@@ -38,6 +38,21 @@ function addComment($articleId, $auteur, $comment){
 	}
 }
 
+function addSignaleCommentaire($id_commentaire, $id_article){
+	$commentManager = new CommentManager();
+	$confirmAddSignale = $commentManager->getCommentSignale($id_commentaire);
+	
+	if($confirmAddSignale != 0 || $confirmAddSignale != 1){
+		$addCommentSignale = $commentManager->addCommentSignale($id_commentaire);
+		header('Location: index.php?action=article&id='.$id_article);
+	}
+	else{
+		throw new Exception('Ce commentaire a déjà été signalé');
+	}
+
+}
+
+
 
 function accueilAdmin(){
 	require('view/frontend/accueilAdminView.php');
@@ -64,9 +79,25 @@ function connectAdmin($identifiant, $password){
 
 
 function afficheGestionAdmin(){
-	$adminManager = new GestionAdmin(); 
-	$commentsAdmin = $adminManager->getCommentsAdmin();
+		$adminManager = new GestionAdmin(); 
+		$commentsAdmin = $adminManager->getCommentsAdmin();
 		
-	require('view/frontend/adminGestionView.php');
+		require('view/frontend/adminGestionView.php');
 }
 
+
+function verifComment($id_commentaire,$signale){
+		$adminManager = new GestionAdmin();
+
+		if($signale == 1){
+			$verifComment = $adminManager->addCommentVerif($signale, $id_commentaire);
+			header('Location: index.php?action=adminGestionView');
+		}
+		elseif($signale == 0){
+			$supprComment = $adminManager->supprComment($id_commentaire);
+			header('Location: index.php?action=adminGestionView');
+		}
+		
+
+			
+}
