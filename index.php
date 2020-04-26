@@ -1,4 +1,5 @@
 <?php 
+	session_start();
 	require('controller/base.php');
 	try{
 		if (isset($_GET['action'])) {
@@ -9,7 +10,7 @@
 				}
 
 				else{
-					throw new Exception('Aucun id de billet envoyé');
+					throw new Exception('Aucun id de billet envoyï¿½');
 				}
 			}
 			elseif($_GET['action'] == 'addComment'){
@@ -28,7 +29,7 @@
 					}
 				}
 				else{
-					throw new Exception('Aucun identifiant de billet envoyé');
+					throw new Exception('Aucun identifiant de billet envoyï¿½');
 				}
 			}
 			elseif($_GET['action'] == 'addSignale'){
@@ -57,15 +58,42 @@
 				
 			}
 			elseif($_GET['action'] == 'adminGestionView'){
-				afficheGestionAdmin();
+				if(isset($_SESSION['identifiant'])){
+					afficheGestionAdmin();
+				}
+				else{
+					var_dump($_SESSION);
+				}
+				
 			}
 			elseif($_GET['action'] == 'verifSignaleComment'){
-				if(isset($_POST['Valider'])){
-					verifComment($_GET['id_commentaire'], 1);
+				if($_SESSION['identifiant']){
+					if(isset($_POST['Valider'])){
+						verifComment($_GET['id_commentaire'], 1);
+					}
+					elseif(isset($_POST['Supprimer'])){
+						verifComment($_GET['id_commentaire'], 0);
+					}
+				}	
+			}
+			elseif($_GET['action'] == 'ajoutArticle'){
+				ajoutArticle();
+			}
+			elseif($_GET['action'] == 'addArticle'){
+				if(!preg_match("#[<>]#", $_POST['titre']) && !preg_match("#[<>]#",$_POST['description'])){
+					addArticle();
 				}
-				elseif(isset($_POST['Supprimer'])){
-					verifComment($_GET['id_commentaire'], 0);
+				else{
+					throw new Exception('Le titre ou la description n\'est pas valide');
 				}
+			}
+			elseif($_GET['action'] == 'modifPassword'){
+				modifPassword();
+			}
+			elseif($_GET['action'] == 'verifModifPassword'){
+				if(!preg_match("#[<>]#", $_POST['ancienPassowrd']) && !preg_match("#[<>]#",$_POST['nouveauPassword']) && !preg_match("#[<>]#",$_POST['nouveauPasswordVerif'])){
+					verifModifPassword();
+				}	
 			}
 			else{
 				afficheListArticles();

@@ -1,4 +1,4 @@
-<?php session_start();?>
+
 <?php $title = 'Accueil' ?>
 <?php ob_start(); ?>
 		<h1>Bienvenue sur mon blog</h1>
