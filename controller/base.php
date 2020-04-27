@@ -18,6 +18,7 @@ function afficheArticle(){
 
 	$articleManager = new ArticleManager();
 	$article = $articleManager->getArticle($_GET['id']);
+	$articleTexte = html_entity_decode($article['texte']);
 
 	$commentManager = new CommentManager();
 	$comments = $commentManager->getComments($_GET['id']);

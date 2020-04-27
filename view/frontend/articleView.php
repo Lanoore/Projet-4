@@ -2,7 +2,7 @@
 <?php ob_start();?>
 	<div>
 		<h3><?=$article['titre']?></h3>
-		<p><?= $article['texte'] ?></p>
+		<p><?= $articleTexte ?></p>
 	</div>
 
 	<h2>Commentaires</h2>
