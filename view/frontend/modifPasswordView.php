@@ -1,5 +1,4 @@
 <?php $title = 'admin'?>
-
 <?php ob_start(); ?>
 
 <form action='index.php?action=verifModifPassword' method='post'>

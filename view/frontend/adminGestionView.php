@@ -1,11 +1,12 @@
 ﻿
 <?php $title = 'admin'?>
-<?php $css ='<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">' ?>
+<?php $css ='<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css"><link rel="stylesheet" type="text/css" href="public/css/adminGestionView.css">' ?>
 <?php $script ='<script type=" text/javascript" src="https://code.jquery.com/jquery-3.5.0.min.js "></script><script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>    <script>$(document).ready(function(){$("#table_commentaire").DataTable();});</script>'?>
 <?php ob_start(); ?>
-
-    <a href='index.php?action=ajoutArticle' >Ajouter un nouvel article</a>
-    <a href='index.php?action=modifPassword'> Changer le mot de passe</a>
+    <div class='lienAdmin'>
+        <a href='index.php?action=ajoutArticle' class='addArticle'>Ajouter un nouvel article</a>
+        <a href='index.php?action=modifPassword'class='changePassword'> Changer le mot de passe</a>
+    </div>
 
      <table id="table_commentaire">
         <thead>

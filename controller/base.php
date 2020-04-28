@@ -167,5 +167,4 @@ function verifModifPassword(){
 			}
 		}
 	}	
-
 }

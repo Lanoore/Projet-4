@@ -1,0 +1,14 @@
+h1{
+    margin-bottom: 5%;
+}
+
+.articleList{
+    text-align: center;
+}
+
+hr{
+
+    border: none;
+    border-top: 2px solid grey;
+    width: 65%;
+}
