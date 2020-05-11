@@ -9,14 +9,14 @@
 			?>
 				<div class="article"> 
 
-					<h3> <?=$article['titre']?></h3>
+					<h2> <?=$article['titre']?></h2>
 					<p><?= $article['description']?></p>
 					<p><?= $article['date_creation']?></p>
 
-					<a href="index.php?action=article&id=<?=$article['id']?>">Affichez l'article</a>
-					<hr>
+					<a class='buttonArticle' href="index.php?action=article&id=<?=$article['id']?>">Affichez l'article</a>
+
 				</div>
-				<br>
+				
 			<?php	
 			}
 			?>

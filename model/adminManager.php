@@ -1,44 +1,45 @@
 <?php
 require_once("model/manager.php");
 
+
 class GestionAdmin extends Manager{
+	function __construct($identifiant){
+		$this->identifiant = $identifiant;
+
+		$getAdmin = $this->getAdmin();
+
+		if(empty($getAdmin)){
+			$password = password_hash('1234', PASSWORD_DEFAULT);
+			$this->insertAdmin('admin', $password);
+		}
+
+	}
 	
+
 	public function getAdmin(){
 		$db = $this->dbConnect();
-		$getAdmin = $db->query('SELECT id_admin, identifiant, password, password_change FROM administration WHERE id_admin = 1');
+		$getAdmin = $db->query('SELECT id_admin, identifiant, password FROM administration WHERE identifiant ="'.$this->identifiant.'"');
 		$getAdmin = $getAdmin->fetch();
+
+		$this->id_admin = $getAdmin['id_admin'];
+		$this->identifiant = $getAdmin['identifiant'];
+		$this->password = $getAdmin['password'];
 		return $getAdmin;
 	}
 
-	public function getCommentsAdmin(){
+	public function insertAdmin($identifiant, $password){
 		$db = $this->dbConnect();
+		$insertAdmin = $db->prepare('INSERT INTO administration(identifiant, password) VALUES(?,?)');
+		$insertAdmin = $insertAdmin->execute(array($identifiant, $password));
+	}
+
+	public static function getCommentsAdmin(){
+		$db = self::dbConnect();
 		$commentsAdmin = $db->query('SELECT commentaire.id id, article.titre titre, commentaire.auteur auteur, commentaire.commentaire commentaire, commentaire.date_commentaire date_commentaire, commentaire.signale signale FROM commentaire INNER JOIN article ON article.id = commentaire.id_article ORDER BY date_commentaire DESC');
 		$commentsAdmin = $commentsAdmin->fetchAll();
 		return $commentsAdmin;
 	}
 
-	public function addCommentVerif($signale, $id_commentaire){
-		$db = $this->dbConnect();
-		$confirmVerifComment = $db->prepare('UPDATE commentaire SET signale = ? WHERE id = ?');
-		$confirmVerifComment->execute(array($signale ,$id_commentaire));
-		
-		return $confirmVerifComment;
-
-	}
-
-	public function supprComment($id_commentaire){
-		$db = $this->dbConnect();
-		$confirmSupprComment = $db->prepare('DELETE FROM commentaire WHERE id= ?');
-		$confirmSupprComment->execute(array($id_commentaire));
-	}
-
-	public function addArticle($titre, $description, $contenu){
-		$db = $this->dbConnect();
-		$addArticle = $db->prepare('INSERT INTO article(titre, description, texte, date_creation) VALUES(?,?,?, NOW())');
-		$confirmAddArticle= $addArticle->execute(array($titre,$description,$contenu));
-
-		return $confirmAddArticle;
-	}
 
 	public function modifPassowrd($password, $identifiant ){
 		$db = $this->dbConnect();
@@ -47,5 +48,7 @@ class GestionAdmin extends Manager{
 
 		return $confirmModifPassword;
 	}
+
+	
 
 }

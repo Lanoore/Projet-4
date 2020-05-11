@@ -1,6 +1,8 @@
 <?php 
 	session_start();
 	require('controller/base.php');
+
+
 	try{
 		if (isset($_GET['action'])) {
 			switch ($_GET['action']) {
@@ -60,49 +62,67 @@
 					}
 					break;
 
-				case 'adminGestionView':
-					if(isset($_SESSION['identifiant'])){
-						afficheGestionAdmin();
-					}
-					break;
-
-				case 'verifSignaleComment':
-					if($_SESSION['identifiant']){
-						if(isset($_POST['Valider'])){
-							verifComment($_GET['id_commentaire'], 1);
+					case 'adminGestionView':
+						if(isset($_SESSION['identifiant'])){
+							afficheGestionAdmin();
 						}
-						elseif(isset($_POST['Supprimer'])){
-							verifComment($_GET['id_commentaire'], 0);
+						break;
+
+					case 'verifSignaleComment':
+						if($_SESSION['identifiant']){
+							if(isset($_POST['Valider'])){
+								verifComment($_GET['id_commentaire'], 1);
+							}
+							elseif(isset($_POST['Supprimer'])){
+								verifComment($_GET['id_commentaire'], 0);
+							}
 						}
-					}
-					break;
+						break;
 
-				case 'ajoutArticle':
-					ajoutArticle();
-					break;
+					case 'ajoutArticle':
+						if(isset($_SESSION['identifiant'])){
+							ajoutArticle();
+						}	
+						break;
 
-				case 'addArticle':
-					if(!preg_match("#[<>]#", $_POST['titre']) && !preg_match("#[<>]#",$_POST['description'])){
-						addArticle();
-					}
-					else{
-						throw new Exception('Le titre ou la description n\'est pas valide');
-					}
-					break;
+					case 'addArticle':
+						if(isset($_SESSION['identifiant'])){
+							if(!preg_match("#[<>]#", $_POST['titre']) && !preg_match("#[<>]#",$_POST['description'])){
+								addArticle();
+							}
+						}	
+						else{
+							throw new Exception('Le titre ou la description n\'est pas valide');
+						}
+						break;
 
-				case 'modifPassword':
-					modifPassword();
-					break;
+					case 'verifArticle':
+						if(isset($_SESSION['identifiant'])){
+							verifArticle();
+						}
+						break;	
 
-				case 'verifModifPassword':
-					if(!preg_match("#[<>]#", $_POST['ancienPassowrd']) && !preg_match("#[<>]#",$_POST['nouveauPassword']) && !preg_match("#[<>]#",$_POST['nouveauPasswordVerif'])){
-						verifModifPassword();
-					}
-					break;	
+					case 'modifArticle':
+						if(isset($_SESSION['identifiant'])){
+							modifArticle();
+						}	
 
-				default:
-					afficheListArticles();
-					break;
+					case 'modifPassword':
+						if(isset($_SESSION['identifiant'])){
+							modifPassword();
+						}	
+						break;
+
+					case 'verifModifPassword':
+						if(isset($_SESSION['identifiant'])){
+							if(!preg_match("#[<>]#", $_POST['ancienPassowrd']) && !preg_match("#[<>]#",$_POST['nouveauPassword']) && !preg_match("#[<>]#",$_POST['nouveauPasswordVerif'])){
+								verifModifPassword();
+							}
+						}	
+						break;	
+			default:
+				afficheListArticles();
+				break;
 			}
 		}
 		else{
