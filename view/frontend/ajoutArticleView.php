@@ -1,7 +1,7 @@
 
 <?php $title = 'admin'?>
 <!-- CSS -->
-<?php $script = '<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script><script>tinymce.init({selector: \'#articleArea\'});</script>'?>
+<?php $script = '<script src="https://cdn.tiny.cloud/1/amz2qjsjr01macp4mb7y8pp67yd2hezik8v80zu2a2v8rww6/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script><script>tinymce.init({selector: \'#articleArea\'});</script>'?>
 
 
 
