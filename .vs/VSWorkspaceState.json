@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\controller",
+    "\\model",
+    "\\public",
+    "\\public\\css",
+    "\\view",
+    "\\view\\frontend"
+  ],
+  "SelectedNode": "\\model\\commentManager.php",
+  "PreviewInSolutionExplorer": false
+}
