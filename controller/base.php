@@ -1,5 +1,7 @@
 <?php
 
+
+
 require('model/articleManager.php');
 require('model/commentManager.php');
 require('model/adminManager.php');
@@ -17,7 +19,10 @@ function afficheArticle(){
 
 	$article = new ArticleManager($_GET['id']);
 
-	$comments = CommentManager::getComments($_GET['id']);
+	$commentsNb = CommentManager::getNbComments($_GET['id']);
+
+	$comments = CommentManager::getComments($_GET['id'],$commentsNb[0],$commentsNb[1]);
+
 
 	require('view/frontend/articleView.php');
 }
@@ -46,10 +51,11 @@ function connectAdmin($identifiant, $password){
 	$passwordCorrect  = password_verify($password, $adminManager->password);
 
 		if($passwordCorrect){
-
+			header('Location:index.php?action=adminGestionView');
 			$_SESSION['identifiant'] = $identifiant;
 			$_SESSION['id_admin'] = $adminManager->id_admin;
-			header('Location: index.php?action=adminGestionView');
+			
+			
 		}
 		else{
 			throw new Exception('Mot de passe ou identifiant invalide');

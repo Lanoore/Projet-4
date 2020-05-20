@@ -5,12 +5,31 @@ class CommentManager extends Manager{
 
 	
 
-	public static function getComments($postId){
+	public static function getComments($postId, $depart,$commentaireParPage){
 		$db = self::dbConnect();
-		$comments = $db->prepare('SELECT id, auteur, commentaire, date_commentaire, signale FROM commentaire WHERE id_article = ? ORDER BY date_commentaire DESC');
+		$comments = $db->prepare('SELECT id, auteur, commentaire, date_commentaire, signale FROM commentaire WHERE id_article = ? ORDER BY date_commentaire DESC LIMIT '.$depart.','.$commentaireParPage);
 		$comments->execute(array($postId));
 
 		return $comments;
+	}
+
+	public static function getNbComments($postId){
+		$db = self::dbConnect();
+		$commentsNb = $db->prepare('SELECT id FROM commentaire WHERE id_article = ?');
+		$commentsNb->execute(array($postId));
+		$commentsNb = $commentsNb->rowCount();
+		$commentaireParPage = 5;
+		$commentairesTotaux = ceil($commentsNb/$commentaireParPage);
+
+		if(isset($_GET['page']) AND  !empty($_GET['page']) AND $_GET['page']> 0 AND $_GET['page'] <=$commentairesTotaux){
+			$_GET['page'] = intval($_GET['page']);
+			$pageCourante = $_GET['page'];
+		}else{
+			$pageCourante= 1;
+		}
+		$depart =($pageCourante-1)*$commentaireParPage;
+
+		return array($depart,$commentaireParPage, $commentairesTotaux,$pageCourante);
 	}
 
 	public static function addComment($articleId, $auteur, $comment){

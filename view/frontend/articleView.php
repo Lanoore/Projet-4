@@ -7,7 +7,7 @@
 		<div>
 		
 			<?php
-			if($article->id != 1){?>
+			if($article->previousArticle == true){?>
 				<a href="index.php?action=article&id=<?=$article->previousArticle?>">Article Précédent</a>
 			<?php } ?>
 			<?php
@@ -56,6 +56,15 @@
 			</div>	
 				
 			<?php
+			}
+
+			for($i=1;$i<=$commentsNb[2]; $i++){
+				if($i == $commentsNb[3]){
+					echo $i.' ';
+				}
+				else{
+					echo '<a href="index.php?action=article&id='.$article->id.'&page='.$i.'">'.$i.'</a>';
+				}
 			}
 		?>
 	</section>	

@@ -8,10 +8,12 @@
         <a href='index.php?action=modifPassword'class='changePassword'> Changer le mot de passe</a>
     </div>
 
+    <h2> Gestion commentaires</h2>
+
     <table id="table_commentaire">
         <thead>
             <tr>
-                <th>Nom de l'article</th>
+                <th>Titre de l'article</th>
                 <th>Auteur</th>
                 <th>Commentaire</th>
                 <th>Date commentaire</th>
@@ -51,6 +53,7 @@
         
     </table>
     
+    <h2> Gestion article</h2>
 
     <table id="table_article">
         <thead>
