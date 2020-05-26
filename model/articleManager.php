@@ -1,5 +1,5 @@
 <?php
-require_once('model/Manager.php');
+require_once('model/manager.php');
 
 class ArticleManager extends Manager{
 
@@ -16,9 +16,9 @@ class ArticleManager extends Manager{
 	}
 
 
-	public static function getArticles(){
+	public static function getArticles($depart,$articlesParPage){
 		$db = self::dbConnect();
-		$req = $db->query('SELECT id, titre, description, date_creation FROM article ORDER BY date_creation DESC');
+		$req = $db->query('SELECT id, titre, description, date_creation FROM article ORDER BY date_creation DESC LIMIT '.$depart.','.$articlesParPage);
 
 		return $req;
 	}
@@ -37,6 +37,27 @@ class ArticleManager extends Manager{
 		
 		
 		return $article;
+	}
+
+	public static function getNbArticles(){
+		$db = self::dbConnect();
+		$articlesNb = $db->prepare('SELECT id FROM article');
+		$articlesNb->execute(array());
+		$articlesNb = $articlesNb->rowCount();
+		$articlesParPage = 8;
+		$articlesTotaux = ceil($articlesNb/$articlesParPage);
+
+		if(isset($_GET['page']) AND !empty($_GET['page']) AND $_GET['page']> 0 AND $_GET['page'] <=$articlesTotaux){
+			$_GET['page'] = intval($_GET['page']);
+			$pageCourante = $_GET['page'];
+		}else{
+			$pageCourante = 1;
+		}
+
+		$depart = ($pageCourante-1)*$articlesParPage;
+		
+		return array($depart,$articlesParPage, $articlesTotaux,$pageCourante);
+
 	}
 
 	public function getArticleSuivant(){

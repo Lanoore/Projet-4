@@ -9,5 +9,32 @@ hr{
     width: 20%;
 }
 
+.paginationArticle span{
+    width: 1.5%;
+    border: 2px solid lightgrey;
+    margin: 0.1em;
+    display: inline-block;
+}
+.paginationArticle a{
+    display: inline-block;
+    width: 100%;
+    background-color: grey;
+}
+.paginationArticle a:hover{
+    transition-property: background-color;
+    transition-duration: 1s;
+    background-color: lightgrey;
+}
 
 
+@media all and (max-device-width: 1024px){
+    .paginationArticle span{
+        width: 2%;
+    }
+}
+
+@media all and (max-device-width: 480px){
+    .paginationArticle span{
+        width: 4%;
+    }
+}
