@@ -33,6 +33,13 @@ class GestionAdmin extends Manager{
 		$insertAdmin = $insertAdmin->execute(array($identifiant, $password));
 	}
 
+	public static function getArticlesAdmin(){
+		$db = self::dbConnect();
+		$req = $db->query('SELECT id, titre, description, date_creation FROM article ORDER BY date_creation DESC');
+
+		return $req;
+	}
+
 	public static function getCommentsAdmin(){
 		$db = self::dbConnect();
 		$commentsAdmin = $db->query('SELECT commentaire.id id, article.titre titre, commentaire.auteur auteur, commentaire.commentaire commentaire, commentaire.date_commentaire date_commentaire, commentaire.signale signale FROM commentaire INNER JOIN article ON article.id = commentaire.id_article ORDER BY date_commentaire DESC');

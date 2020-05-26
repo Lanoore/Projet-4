@@ -32,3 +32,40 @@ h1{
     background-color: whitesmoke;
 }
 
+
+.paginationArticle{
+    display: flex;
+    justify-content: center;
+}
+
+.paginationArticle span{
+    width: 2%;
+    border: 2px solid lightgrey;
+    margin: 0.1em;
+    display: inline-block;
+}
+.paginationArticle a{
+    display: inline-block;
+    width: 100%;
+    background-color: grey;
+}
+.paginationArticle a:hover{
+    transition-property: background-color;
+    transition-duration: 1s;
+    background-color: lightgrey;
+}
+
+@media all and (max-device-width: 1024px) /*Version tablette*/
+{
+.article{
+    width: 40%;
+    height: 180px;
+}
+}
+
+@media all and (max-device-width: 480px)/*Version mobile*/
+{
+   .article{
+    width: 90%;
+   } 
+}

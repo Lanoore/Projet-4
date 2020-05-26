@@ -7,52 +7,52 @@
         <a href='index.php?action=ajoutArticle' class='addArticle'>Ajouter un nouvel article</a>
         <a href='index.php?action=modifPassword'class='changePassword'> Changer le mot de passe</a>
     </div>
+    <section>
+        <h2> Gestion commentaires</h2>
 
-    <h2> Gestion commentaires</h2>
-
-    <table id="table_commentaire">
-        <thead>
-            <tr>
-                <th>Titre de l'article</th>
-                <th>Auteur</th>
-                <th>Commentaire</th>
-                <th>Date commentaire</th>
-                <th>Signalé?</th>
-            </tr>
-        </thead>
-        <tbody> 
-
-            <?php
-                foreach($commentsAdmin as $commentAdmin)
-                {
-                ?>
+        <table id="table_commentaire">
+            <thead>
                 <tr>
-                    <td><?=$commentAdmin['titre']?></td>
-                    <td><?=$commentAdmin['auteur']?></td>
-                    <td><?=$commentAdmin['commentaire']?></td>
-                    <td><?=$commentAdmin['date_commentaire']?></td>
-
-                    <?php if($commentAdmin['signale']=== NULL){?>
-                        <td>Non signalé <form action="index.php?action=verifSignaleComment&id_commentaire=<?=$commentAdmin['id']?>" method="post"><input type="submit" name="Valider" value="Valider"></input><input type="submit" name="Supprimer" value="Supprimer"></input></form></td>
-                    <?php
-					}
-                    elseif($commentAdmin['signale'] == 0){?>
-                        <td>Signalé<form action="index.php?action=verifSignaleComment&id_commentaire=<?=$commentAdmin['id']?>" method="post"><input type="submit" name="Valider" value="Valider"></input><input type="submit" name="Supprimer" value="Supprimer"></input></form></td>
-                    <?php
-                    }
-                    elseif($commentAdmin['signale'] == 1){?>
-                        <td>Vérifié</td>
-                    <?php    
-					}
-                    ?>
+                    <th>Titre de l'article</th>
+                    <th>Auteur</th>
+                    <th>Commentaire</th>
+                    <th>Date commentaire</th>
+                    <th>Signalé?</th>
                 </tr>
+            </thead>
+            <tbody> 
+
                 <?php
-				}    
-            ?>
-        </tbody>
-        
-    </table>
-    
+                    foreach($commentsAdmin as $commentAdmin)
+                    {
+                    ?>
+                    <tr>
+                        <td><?=$commentAdmin['titre']?></td>
+                        <td><?=$commentAdmin['auteur']?></td>
+                        <td><?=$commentAdmin['commentaire']?></td>
+                        <td><?=$commentAdmin['date_commentaire']?></td>
+
+                        <?php if($commentAdmin['signale']=== NULL){?>
+                            <td>Non signalé <form action="index.php?action=verifSignaleComment&id_commentaire=<?=$commentAdmin['id']?>" method="post"><input type="submit" name="Valider" value="Valider"></input><input type="submit" name="Supprimer" value="Supprimer"></input></form></td>
+                        <?php
+                        }
+                        elseif($commentAdmin['signale'] == 0){?>
+                            <td>Signalé<form action="index.php?action=verifSignaleComment&id_commentaire=<?=$commentAdmin['id']?>" method="post"><input type="submit" name="Valider" value="Valider"></input><input type="submit" name="Supprimer" value="Supprimer"></input></form></td>
+                        <?php
+                        }
+                        elseif($commentAdmin['signale'] == 1){?>
+                            <td>Vérifié</td>
+                        <?php    
+                        }
+                        ?>
+                    </tr>
+                    <?php
+                    }    
+                ?>
+            </tbody>
+            
+        </table>
+    </section>
     <h2> Gestion article</h2>
 
     <table id="table_article">

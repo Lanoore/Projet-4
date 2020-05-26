@@ -19,8 +19,23 @@
 				
 			<?php	
 			}
+
+			
 			?>
-		</section>	
+		</section>
+		<div class='paginationArticle'>
+			<?php
+			for($i=1;$i<=$articlesNb[2]; $i++){
+				if($i == $articlesNb[3]){
+					echo '<span>'.$i.'</span>';
+				}
+				else{
+					echo '<span><a href="index.php?page='.$i.'">'.$i.'</a></span>';
+				}
+			}
+			
+			?>
+		</div>
 <?php $content = ob_get_clean(); ?>
 
 <?php require('template.php'); ?>

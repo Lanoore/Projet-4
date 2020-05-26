@@ -9,8 +9,9 @@ require('model/adminManager.php');
 
 function afficheListArticles(){
 	
+	$articlesNb = articleManager::getNbArticles();
 
-	$articles = articleManager::getArticles();
+	$articles = articleManager::getArticles($articlesNb[0],$articlesNb[1]);
 
 	require('view/frontend/listArticleView.php');	
 }
@@ -68,7 +69,7 @@ function afficheGestionAdmin(){
 		$commentsAdmin = GestionAdmin::getCommentsAdmin();
 
 
-		$articlesAdmin = ArticleManager::getArticles();
+		$articlesAdmin = GestionAdmin::getArticlesAdmin();
 
 		require('view/frontend/adminGestionView.php');
 }

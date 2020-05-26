@@ -54,20 +54,22 @@
 				?>
 				<hr>
 			</div>	
-				
-			<?php
-			}
+			<?php } ?>
 
+	</section>
+
+	<div class='paginationArticle'>	
+		<?php
 			for($i=1;$i<=$commentsNb[2]; $i++){
 				if($i == $commentsNb[3]){
-					echo $i.' ';
+					echo '<span>'.$i.'</span>';
 				}
 				else{
-					echo '<a href="index.php?action=article&id='.$article->id.'&page='.$i.'">'.$i.'</a>';
+					echo '<span><a href="index.php?action=article&id='.$article->id.'&page='.$i.'">'.$i.'</a></span>';
 				}
 			}
 		?>
-	</section>	
+	</div>
 
 <?php $content = ob_get_clean(); ?>
 
