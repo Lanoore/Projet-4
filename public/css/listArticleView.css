@@ -57,10 +57,10 @@ h1{
 
 @media all and (max-device-width: 1024px) /*Version tablette*/
 {
-.article{
-    width: 40%;
-    height: 180px;
-}
+    .article{
+        width: 40%;
+        height: 180px;
+    }
 }
 
 @media all and (max-device-width: 480px)/*Version mobile*/
