@@ -32,7 +32,7 @@ class CommentManager extends Manager{
 		return array($depart,$commentaireParPage, $commentairesTotaux,$pageCourante);
 	}
 
-	public static function addComment($articleId, $auteur, $comment){
+	public static function addComment($articleId,$auteur,$comment){
 		$db= self::dbConnect();
 		$comments = $db->prepare('INSERT INTO commentaire(id_article, auteur, commentaire ,date_commentaire) VALUES(?,?,?,NOW())');
 		$confirmCommentAdd = $comments->execute(array($articleId, $auteur, $comment));

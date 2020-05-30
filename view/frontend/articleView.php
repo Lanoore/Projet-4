@@ -1,7 +1,7 @@
 ﻿<?php $title = 'Article'?>
 <?php $css = '<link rel="stylesheet" type="text/css" href="public/css/articleView.css">'?>
 <?php ob_start();?>
-	<section>
+	<article>
 		<h2><?=$article->titre?></h2>
 		<p><?=$article->texte ?></p>
 		<div>
@@ -19,7 +19,7 @@
 			?>
 		</div>
 		<hr>
-	</section>
+	</article>
 	
 	<section class='postCommentaire'>
 		<h3>Commentaires</h3>

@@ -7,7 +7,7 @@
 			<?php
 			foreach($articles as $article){
 			?>
-				<div class="article"> 
+				<article class="article"> 
 
 					<h2> <?=$article['titre']?></h2>
 					<p><?= $article['description']?></p>
@@ -15,7 +15,7 @@
 
 					<a class='buttonArticle' href="index.php?action=article&id=<?=$article['id']?>">Affichez l'article</a>
 
-				</div>
+				</article>
 				
 			<?php	
 			}

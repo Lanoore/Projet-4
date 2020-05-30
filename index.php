@@ -18,7 +18,7 @@
 				case 'addComment':
 					if(isset($_GET['id'])&& $_GET['id'] > 0){
 						if(!empty($_POST['auteur'])&& !empty($_POST['commentaire'])){
-							if(!preg_match("#[<>]#", $_POST['auteur']) && !preg_match("#[<>]#",$_POST['commentaire'])){
+							if(!preg_match("#[<>1-9]#", $_POST['auteur']) && !preg_match("#[<>1-9]#",$_POST['commentaire'])){
 								addComment($_GET['id'], $_POST['auteur'], $_POST['commentaire']);
 							}
 							else{
