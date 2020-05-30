@@ -105,7 +105,10 @@ class ArticleManager extends Manager{
 		$req = $db->prepare('DELETE FROM article WHERE id = ?');
 		$confirmSuppr = $req->execute(array($_GET['id_article']));
 
-		if($confirmSuppr === true){
+		$req = $db->prepare('DELETE FROM commentaire WHERE id_article = ?');
+		$confirmSupprC = $req->execute(array($_GET['id_article']));
+
+		if($confirmSuppr === true && $confirmSupprC === true) {
 			header('Location:index.php?action=adminGestionView');
 		}	
 		else{

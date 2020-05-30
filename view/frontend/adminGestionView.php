@@ -61,7 +61,7 @@
                 <th>Titre de l'article</th>
                 <th>Description</th>
                 <th>Date de mise en ligne</th>
-                <th>Surppimer ou modifier</th>
+                <th>Supprimer ou modifier</th>
             </tr>
         </thead>
         <tbody>
