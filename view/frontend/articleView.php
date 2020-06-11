@@ -1,6 +1,7 @@
 ﻿<?php $title = 'Article'?>
 <?php $css = '<link rel="stylesheet" type="text/css" href="public/css/articleView.css">'?>
 <?php ob_start();?>
+
 	<article>
 		<h2><?=$article->titre?></h2>
 		<p><?=$article->texte ?></p>

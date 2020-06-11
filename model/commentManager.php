@@ -6,6 +6,7 @@ class CommentManager extends Manager{
 	
 
 	public static function getComments($postId, $depart,$commentaireParPage){
+		//Récupère les commentaires à afficher
 		$db = self::dbConnect();
 		$comments = $db->prepare('SELECT id, auteur, commentaire, date_commentaire, signale FROM commentaire WHERE id_article = ? ORDER BY date_commentaire DESC LIMIT '.$depart.','.$commentaireParPage);
 		$comments->execute(array($postId));
@@ -13,7 +14,8 @@ class CommentManager extends Manager{
 		return $comments;
 	}
 
-	public static function getNbComments($postId){
+	public static function getNbComments ($postId){
+		//Récupère le nombre de commentaires à afficher sur la page en cours de visionage 
 		$db = self::dbConnect();
 		$commentsNb = $db->prepare('SELECT id FROM commentaire WHERE id_article = ?');
 		$commentsNb->execute(array($postId));
@@ -33,33 +35,30 @@ class CommentManager extends Manager{
 	}
 
 	public static function addComment($articleId,$auteur,$comment){
+		//Permet d'ajouter un commentaire
 		$db= self::dbConnect();
 		$comments = $db->prepare('INSERT INTO commentaire(id_article, auteur, commentaire ,date_commentaire) VALUES(?,?,?,NOW())');
 		$confirmCommentAdd = $comments->execute(array($articleId, $auteur, $comment));
 
-		if($confirmCommentAdd === false){
-			throw new Exception ('Impossible d\'ajouter le commentaire!');
-		}
-		else{
-			header('Location: index.php?action=article&id='.$articleId);
-		}
+		return $confirmCommentAdd;
+		
+		
 	}
 
 	public static function getCommentSignale($id_commentaire, $id_article){
+		//Récupère les commentaire signale
 		$db = self::dbConnect();
 		$commentSignale = $db->prepare('SELECT signale FROM commentaire WHERE id = ?');
 		$commentSignale->execute(array($id_commentaire));
 
-		if($commentSignale != 0 || $commentSignale != 1){
-			self::addCommentSignale($id_commentaire);
-			header('Location: index.php?action=article&id='.$id_article);
-		}
-		else{
-			throw new Exception('Ce commentaire a déjà été signalé');
-		}
+		return $commentSignale;
+
+
+		
 	}
 
 	public static function addCommentSignale($id_commentaire){
+		//Permet de signale un commentaire
 		$db = self::dbConnect();
 		$confirmAddCommentSignale = $db->prepare('UPDATE commentaire SET signale = 0 WHERE id = ?');	
 		$confirmAddCommentSignale->execute(array($id_commentaire));
@@ -68,6 +67,7 @@ class CommentManager extends Manager{
 	}
 
 	public static function addCommentVerif($signale, $id_commentaire){
+		//Permet de vérifier un commentaire
 		$db = self::dbConnect();
 		$confirmVerifComment = $db->prepare('UPDATE commentaire SET signale = ? WHERE id = ?');
 		$confirmVerifComment->execute(array($signale ,$id_commentaire));
@@ -77,8 +77,11 @@ class CommentManager extends Manager{
 	}
 
 	public static function supprComment($id_commentaire){
+		//Permet de supprimer un commentaire
 		$db = self::dbConnect();
 		$confirmSupprComment = $db->prepare('DELETE FROM commentaire WHERE id= ?');
 		$confirmSupprComment->execute(array($id_commentaire));
+
+		return $confirmSupprComment;
 	}
 }

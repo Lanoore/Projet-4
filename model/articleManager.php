@@ -17,6 +17,7 @@ class ArticleManager extends Manager{
 
 
 	public static function getArticles($depart,$articlesParPage){
+		//Récupére les articles à afficher
 		$db = self::dbConnect();
 		$req = $db->query('SELECT id, titre, description, date_creation FROM article ORDER BY date_creation DESC LIMIT '.$depart.','.$articlesParPage);
 
@@ -24,6 +25,7 @@ class ArticleManager extends Manager{
 	}
 
 	public function getArticle(){
+		//Récupère les informations sur un article précis
 		$db = $this->dbConnect();
 		$req = $db->prepare('SELECT id, titre, description, texte, date_creation FROM article WHERE id = ?');
 		$req->execute(array($this->idArticle));
@@ -39,7 +41,16 @@ class ArticleManager extends Manager{
 		return $article;
 	}
 
+	public static function verifIdArticleExist($articleId){
+		$db = self::dbConnect();
+		$req = $db->prepare('SELECT id FROM article WHERE id = ?');
+		$req->execute(array($articleId));
+		$req = $req->fetch();
+		return $req;
+	}
+
 	public static function getNbArticles(){
+		//Récupère le nombre d'articles à afficher sur la page en cours de visionnage
 		$db = self::dbConnect();
 		$articlesNb = $db->prepare('SELECT id FROM article');
 		$articlesNb->execute(array());
@@ -61,6 +72,7 @@ class ArticleManager extends Manager{
 	}
 
 	public function getArticleSuivant(){
+		//Permet de connaitre l'id de l'article suivant
 		$db = $this->dbConnect();
 		$req = $db->prepare('SELECT id FROM article WHERE id = (SELECT min(id) FROM article WHERE id > ?)');
 		$req->execute(array($this->idArticle));
@@ -71,6 +83,7 @@ class ArticleManager extends Manager{
 	}
 
 	public function getArticlePrecedent(){
+		//Permet de connaitre l'id de l'article précédent
 		$db = $this->dbConnect();
 		$req = $db->prepare('SELECT id FROM article WHERE id =(SELECT max(id) FROM article WHERE id < ?)');
 		$req->execute(array($this->idArticle));
@@ -81,7 +94,7 @@ class ArticleManager extends Manager{
 	}
 
 	public static function addArticle(){
-
+		//Permet d'ajouter un article
 		$titre = htmlentities($_POST['titre']);
 		$description = htmlentities($_POST['description']);
 		$contenu = htmlentities($_POST['contenu']);
@@ -90,34 +103,25 @@ class ArticleManager extends Manager{
 		$addArticle = $db->prepare('INSERT INTO article(titre, description, texte, date_creation) VALUES(?,?,?, NOW())');
 		$confirmAddArticle= $addArticle->execute(array($titre,$description,$contenu));
 
-		if($confirmAddArticle === true){
-			header('Location: index.php?action');
-		}
-		else{
-			throw new Exception('L\'article n\'a pas pu etre envoyer');
-		}
+		return $confirmAddArticle;
+
+
 
 	}
 
 
 	public static function supprArticle(){
+		//Permet de supprimer un article ansi que via la clé étrangère les commentaires associés
 		$db = self::dbConnect();
 		$req = $db->prepare('DELETE FROM article WHERE id = ?');
 		$confirmSuppr = $req->execute(array($_GET['id_article']));
 
-		$req = $db->prepare('DELETE FROM commentaire WHERE id_article = ?');
-		$confirmSupprC = $req->execute(array($_GET['id_article']));
+		return $confirmSuppr;
 
-		if($confirmSuppr === true && $confirmSupprC === true) {
-			header('Location:index.php?action=adminGestionView');
-		}	
-		else{
-			throw new Exception('L\'article n\'a pas pu etre supprimer');
-		}
 	}
 
 	public static function modifArticle(){
-
+		//Permet de modifier un article
 		$titre = htmlentities($_POST['titre']);
 		$description = htmlentities($_POST['description']);
 		$contenu = htmlentities($_POST['contenu']);
@@ -126,12 +130,9 @@ class ArticleManager extends Manager{
 		$req = $db->prepare('UPDATE article SET titre = ?, description = ?, texte = ?  WHERE id = ?');
 		$confirmModif = $req->execute(array($titre,$description,$contenu, $_GET['id_article']));
 
-		if($confirmModif === true){
-			header("Location: index.php?action");
-		}
-		else{
-			throw new Exception('L\'article n\'a pas pu etre modifier');
-		}
+		return $confirmModif;
+
+		
 	}
 
 }
