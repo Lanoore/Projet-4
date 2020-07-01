@@ -10,7 +10,9 @@ class GestionAdmin extends Manager{
 
 		if(empty($getAdmin)){
 			$password = password_hash('1234', PASSWORD_DEFAULT);
-			$this->insertAdmin('admin', $password);
+			$this->identifiant = 'admin';
+			$this->password = $password;
+			$this->insertAdmin();
 		}
 
 	}
@@ -28,11 +30,11 @@ class GestionAdmin extends Manager{
 		return $getAdmin;
 	}
 
-	public function insertAdmin($identifiant, $password){
+	public function insertAdmin(){
 		//Permet d'insérer un admin par défaux 
 		$db = $this->dbConnect();
 		$insertAdmin = $db->prepare('INSERT INTO administration(identifiant, password) VALUES(?,?)');
-		$insertAdmin = $insertAdmin->execute(array($identifiant, $password));
+		$insertAdmin = $insertAdmin->execute(array($this->identifiant, $this->password));
 	}
 
 	public static function getArticlesAdmin(){
@@ -52,11 +54,11 @@ class GestionAdmin extends Manager{
 	}
 
 
-	public function modifPassowrd($password, $identifiant ){
+	public function modifPassowrd(){
 		//Permet de modifier le mot de passe dans la bdd
 		$db = $this->dbConnect();
 		$confirmModifPassword = $db->prepare('UPDATE administration SET password = ?, password_change = 1 WHERE identifiant = ?');
-		$confirmModifPassword->execute(array($password, $identifiant));
+		$confirmModifPassword->execute(array($this->password_hache, $this->identifiant));
 
 		return $confirmModifPassword;
 	}

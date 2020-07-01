@@ -6,8 +6,11 @@
 	try{
 		if (isset($_GET['action'])) {
 			switch ($_GET['action']) {
+				case 'info':
+						afficheInfo();
+					break;
 				case 'article':
-						afficheArticle($_GET['id']);
+						afficheArticle($_GET['id'],$_GET['page']);
 					break;
 				case 'addComment':
 						addComment($_GET['id']);
@@ -44,11 +47,11 @@
 						break;
 
 					case 'verifArticle':
-							verifArticle();
+							verifArticle($_GET['id_article']);
 						break;	
 
 					case 'modifArticle':
-							modifArticle();
+							modifArticle($_GET['id_article']);
 						break;
 					case 'modifPassword':
 							modifPassword();
@@ -58,12 +61,12 @@
 							verifModifPassword();
 						break;	
 			default:
-				afficheListArticles();
+				afficheListArticles($_GET['page']);
 				break;
 			}
 		}
 		else{
-			afficheListArticles();
+			afficheListArticles(null);
 		}
 	}
 	catch(Exception $e){

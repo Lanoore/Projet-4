@@ -10,6 +10,7 @@ h1{
 }
 
 .article{
+    border-radius: 45px;
     color: #00909e;
     width: 15%;
     height: 10%;;
