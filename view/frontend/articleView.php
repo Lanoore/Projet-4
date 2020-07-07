@@ -1,6 +1,7 @@
 ﻿<?php $title = 'Article'?>
 <?php $css = '<link rel="stylesheet" type="text/css" href="public/css/articleView.css">'?>
 <?php ob_start();?>
+
 	<article>
 		<h2><?=$article->titre?></h2>
 		<p><?=$article->texte ?></p>
@@ -8,12 +9,12 @@
 		
 			<?php
 			if($article->previousArticle == true){?>
-				<a href="index.php?action=article&id=<?=$article->previousArticle?>">Article Précédent</a>
+				<a href="index.php?action=article&id=<?=$article->previousArticle?>'&page=1">Article Précédent</a>
 			<?php } ?>
 			<?php
 			if($article->nextArticle == true){?>
 			
-				<a href="index.php?action=article&id=<?=$article->nextArticle?>">Article Suivant</a>
+				<a href="index.php?action=article&id=<?=$article->nextArticle?>'&page=1">Article Suivant</a>
 			<?php
 			}
 			?>
@@ -60,8 +61,8 @@
 
 	<div class='paginationArticle'>	
 		<?php
-			for($i=1;$i<=$commentsNb[2]; $i++){
-				if($i == $commentsNb[3]){
+			for($i=1;$i<=$commentairesTotaux; $i++){
+				if($i == $pageCourante){
 					echo '<span>'.$i.'</span>';
 				}
 				else{

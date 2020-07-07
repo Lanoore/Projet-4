@@ -4,26 +4,39 @@ require_once('model/manager.php');
 class ArticleManager extends Manager{
 
 	function __construct($idArticle){
-		$this->idArticle = $idArticle;
+		$this->id = null;
+		$this->titre = null;
+		$this->description = null;
+		$this->texte = null;
+		$this->date = null;
 
+		
 
-		$this->getArticle();
+		if($idArticle!= null){
 
+			$this->idArticle = $idArticle;
 
-		$this->getArticleSuivant();
-		$this->getArticlePrecedent();
+			$this->getArticle();
+
+			$this->getArticleSuivant();
+			$this->getArticlePrecedent();
+		}
+
+		
 			
 	}
 
 
-	public static function getArticles($depart,$articlesParPage){
+	public function getArticles(){
+		//Récupére les articles à afficher
 		$db = self::dbConnect();
-		$req = $db->query('SELECT id, titre, description, date_creation FROM article ORDER BY date_creation DESC LIMIT '.$depart.','.$articlesParPage);
+		$req = $db->query('SELECT id, titre, description, date_creation FROM article ORDER BY date_creation DESC LIMIT '.$this->depart.','.$this->articlesParPage);
 
 		return $req;
 	}
 
 	public function getArticle(){
+		//Récupère les informations sur un article précis
 		$db = $this->dbConnect();
 		$req = $db->prepare('SELECT id, titre, description, texte, date_creation FROM article WHERE id = ?');
 		$req->execute(array($this->idArticle));
@@ -39,28 +52,27 @@ class ArticleManager extends Manager{
 		return $article;
 	}
 
-	public static function getNbArticles(){
+	public static function verifIdArticleExist($articleId){
+		$db = self::dbConnect();
+		$req = $db->prepare('SELECT id FROM article WHERE id = ?');
+		$req->execute(array($articleId));
+		$req = $req->fetch();
+		return $req;
+	}
+
+	public  function getNbArticles(){
+		//Récupère le nombre d'articles à afficher sur la page en cours de visionnage
 		$db = self::dbConnect();
 		$articlesNb = $db->prepare('SELECT id FROM article');
 		$articlesNb->execute(array());
 		$articlesNb = $articlesNb->rowCount();
-		$articlesParPage = 8;
-		$articlesTotaux = ceil($articlesNb/$articlesParPage);
+		$this->articlesNb = $articlesNb;
 
-		if(isset($_GET['page']) AND !empty($_GET['page']) AND $_GET['page']> 0 AND $_GET['page'] <=$articlesTotaux){
-			$_GET['page'] = intval($_GET['page']);
-			$pageCourante = $_GET['page'];
-		}else{
-			$pageCourante = 1;
-		}
-
-		$depart = ($pageCourante-1)*$articlesParPage;
-		
-		return array($depart,$articlesParPage, $articlesTotaux,$pageCourante);
 
 	}
 
 	public function getArticleSuivant(){
+		//Permet de connaitre l'id de l'article suivant
 		$db = $this->dbConnect();
 		$req = $db->prepare('SELECT id FROM article WHERE id = (SELECT min(id) FROM article WHERE id > ?)');
 		$req->execute(array($this->idArticle));
@@ -71,6 +83,7 @@ class ArticleManager extends Manager{
 	}
 
 	public function getArticlePrecedent(){
+		//Permet de connaitre l'id de l'article précédent
 		$db = $this->dbConnect();
 		$req = $db->prepare('SELECT id FROM article WHERE id =(SELECT max(id) FROM article WHERE id < ?)');
 		$req->execute(array($this->idArticle));
@@ -80,58 +93,41 @@ class ArticleManager extends Manager{
 		return $previousArticle;
 	}
 
-	public static function addArticle(){
-
-		$titre = htmlentities($_POST['titre']);
-		$description = htmlentities($_POST['description']);
-		$contenu = htmlentities($_POST['contenu']);
+	public function addArticle(){
+		//Permet d'ajouter un article
 
 		$db = self::dbConnect();
 		$addArticle = $db->prepare('INSERT INTO article(titre, description, texte, date_creation) VALUES(?,?,?, NOW())');
-		$confirmAddArticle= $addArticle->execute(array($titre,$description,$contenu));
+		$confirmAddArticle= $addArticle->execute(array($this->titre,$this->descr,$this->texte));
 
-		if($confirmAddArticle === true){
-			header('Location: index.php?action');
-		}
-		else{
-			throw new Exception('L\'article n\'a pas pu etre envoyer');
-		}
+		return $confirmAddArticle;
+
+
 
 	}
 
 
-	public static function supprArticle(){
+	public static function supprArticle($id_article){
+		//Permet de supprimer un article ainsi que via la clé étrangère les commentaires associés
 		$db = self::dbConnect();
 		$req = $db->prepare('DELETE FROM article WHERE id = ?');
-		$confirmSuppr = $req->execute(array($_GET['id_article']));
+		$confirmSuppr = $req->execute(array($id_article));
 
-		$req = $db->prepare('DELETE FROM commentaire WHERE id_article = ?');
-		$confirmSupprC = $req->execute(array($_GET['id_article']));
+		return $confirmSuppr;
 
-		if($confirmSuppr === true && $confirmSupprC === true) {
-			header('Location:index.php?action=adminGestionView');
-		}	
-		else{
-			throw new Exception('L\'article n\'a pas pu etre supprimer');
-		}
 	}
 
-	public static function modifArticle(){
-
-		$titre = htmlentities($_POST['titre']);
-		$description = htmlentities($_POST['description']);
-		$contenu = htmlentities($_POST['contenu']);
+	public function modifArticle(){
+		//Permet de modifier un article
+		
 
 		$db = self::dbConnect();
 		$req = $db->prepare('UPDATE article SET titre = ?, description = ?, texte = ?  WHERE id = ?');
-		$confirmModif = $req->execute(array($titre,$description,$contenu, $_GET['id_article']));
+		$confirmModif = $req->execute(array($this->titre,$this->description,$this->texte, $this->id));
 
-		if($confirmModif === true){
-			header("Location: index.php?action");
-		}
-		else{
-			throw new Exception('L\'article n\'a pas pu etre modifier');
-		}
+		return $confirmModif;
+
+		
 	}
 
 }

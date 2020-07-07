@@ -6,42 +6,18 @@
 	try{
 		if (isset($_GET['action'])) {
 			switch ($_GET['action']) {
+				case 'info':
+						afficheInfo();
+					break;
 				case 'article':
-					if(isset($_GET['id']) && $_GET['id']> 0){
-						afficheArticle();
-					}
-		
-					else{
-						throw new Exception('Aucun id de billet envoyé');
-					}
+						afficheArticle($_GET['id'],$_GET['page']);
 					break;
 				case 'addComment':
-					if(isset($_GET['id'])&& $_GET['id'] > 0){
-						if(!empty($_POST['auteur'])&& !empty($_POST['commentaire'])){
-							if(!preg_match("#[<>1-9]#", $_POST['auteur']) && !preg_match("#[<>1-9]#",$_POST['commentaire'])){
-								addComment($_GET['id'], $_POST['auteur'], $_POST['commentaire']);
-							}
-							else{
-								
-								throw new Exception('Rentrer un pseudo et un commentaire valide');
-							}
-						}
-						else{
-							throw new Exception('Tous les champs ne sont pas remplis!');
-						}
-					}
-					else{
-						throw new Exception('Aucun identifiant de billet envoyé');
-					}
+						addComment($_GET['id']);
 					break;
 		
 				case 'addSignale':
-					if(isset($_GET['id_commentaire'])&& $_GET['id_commentaire'] > 0 && isset($_GET['id_article'])&& $_GET['id_article']>0){
 						addSignaleCommentaire($_GET['id_commentaire'], $_GET['id_article']);
-					}
-					else{
-						throw new Exception('Un id de commentaire ainsi qu\'un id d\'article est requis ou est incorrect');
-					}
 					break;
 
 				case 'admin':
@@ -49,84 +25,48 @@
 					break;
 
 				case 'connectAdmin':
-					if(!empty($_POST['identifiant']) && !empty($_POST['password'])){
-						if(!preg_match("#[<>]#", $_POST['identifiant']) && !preg_match("#[<>]#",$_POST['password'])){
-							connectAdmin($_POST['identifiant'], $_POST['password']);
-						}
-						else{
-							throw new Exception('Rentrer un identifiant et un mot de passe valide');
-						}
-					}
-					else{
-						throw new Exception('Tous les champs ne sont pas remplis');
-					}
+							connectAdmin();
 					break;
 
 					case 'adminGestionView':
-						if(isset($_SESSION['identifiant'])){
 							afficheGestionAdmin();
-						}
 						break;
 
 					case 'verifSignaleComment':
-						if($_SESSION['identifiant']){
-							if(isset($_POST['Valider'])){
-								verifComment($_GET['id_commentaire'], 1);
-							}
-							elseif(isset($_POST['Supprimer'])){
-								verifComment($_GET['id_commentaire'], 0);
-							}
-						}
+							verifComment($_GET['id_commentaire']);
+			
 						break;
 
 					case 'ajoutArticle':
-						if(isset($_SESSION['identifiant'])){
 							ajoutArticle();
-						}	
 						break;
 
 					case 'addArticle':
-						if(isset($_SESSION['identifiant'])){
-							if(!preg_match("#[<>]#", $_POST['titre']) && !preg_match("#[<>]#",$_POST['description'])){
-								addArticle();
-							}
-						}	
-						else{
-							throw new Exception('Le titre ou la description n\'est pas valide');
-						}
+							addArticle();
+						
 						break;
 
 					case 'verifArticle':
-						if(isset($_SESSION['identifiant'])){
-							verifArticle();
-						}
+							verifArticle($_GET['id_article']);
 						break;	
 
 					case 'modifArticle':
-						if(isset($_SESSION['identifiant'])){
-							modifArticle();
-						}	
-
+							modifArticle($_GET['id_article']);
+						break;
 					case 'modifPassword':
-						if(isset($_SESSION['identifiant'])){
 							modifPassword();
-						}	
 						break;
 
 					case 'verifModifPassword':
-						if(isset($_SESSION['identifiant'])){
-							if(!preg_match("#[<>]#", $_POST['ancienPassowrd']) && !preg_match("#[<>]#",$_POST['nouveauPassword']) && !preg_match("#[<>]#",$_POST['nouveauPasswordVerif'])){
-								verifModifPassword();
-							}
-						}	
+							verifModifPassword();
 						break;	
 			default:
-				afficheListArticles();
+				afficheListArticles($_GET['page']);
 				break;
 			}
 		}
 		else{
-			afficheListArticles();
+			afficheListArticles(null);
 		}
 	}
 	catch(Exception $e){

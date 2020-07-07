@@ -7,36 +7,130 @@ require('model/commentManager.php');
 require('model/adminManager.php');
 
 
-function afficheListArticles(){
-	
-	$articlesNb = articleManager::getNbArticles();
+function afficheInfo(){
 
-	$articles = articleManager::getArticles($articlesNb[0],$articlesNb[1]);
+	require('view/frontend/infoView.php');
+}
 
+
+function afficheListArticles($page){
+	$article = new ArticleManager(null);
+	$getArticlesNb = $article->getNbArticles();
+
+	$articlesParPage = 8;
+	$articlesTotaux = ceil($article->articlesNb/$articlesParPage);
+
+	if(isset($page) AND !empty($page) AND $page> 0 AND $page <=$articlesTotaux){
+		$page = intval($page);
+		$pageCourante = $page;
+	}else{
+		$pageCourante = 1;
+	}
+
+	$article->depart = ($pageCourante-1)*$articlesParPage;
+	$article->articlesParPage = $articlesParPage;
+	$articles = $article->getArticles();
 	require('view/frontend/listArticleView.php');	
 }
 
-function afficheArticle(){
+function afficheArticle($idArticle,$page){
 
-	$article = new ArticleManager($_GET['id']);
+	if(isset($idArticle)&& $idArticle > 0){
+		$article = new ArticleManager($idArticle);
+		if(empty($article->id )){
+			header('Location:index.php');	
+		}
+		$comment = new CommentManager($idArticle);
+		$commentsNb = $comment->getNbComments();
+		
+		$commentaireParPage = 5;
+		$commentairesTotaux = ceil($comment->commentsNb/$commentaireParPage);
 
-	$commentsNb = CommentManager::getNbComments($_GET['id']);
+		if(isset($page) AND  !empty($page) AND $page> 0 AND $page <=$commentairesTotaux){
+			$page = intval($page);
+			$pageCourante = $page;
+		}else{
+			$pageCourante= 1;
+		}
+		$depart =($pageCourante-1)*$commentaireParPage;
+	
+		$comment->depart = $depart;
+		$comment->commentaireParPage = $commentaireParPage;
+		$comments = $comment->getComments();
 
-	$comments = CommentManager::getComments($_GET['id'],$commentsNb[0],$commentsNb[1]);
+	
+	
+		require('view/frontend/articleView.php');
+	}else{
+		throw new Exception('Aucun id de billet envoyé');
+	}
 
 
-	require('view/frontend/articleView.php');
 }
 
-function addComment($articleId, $auteur, $comment){
+function addComment($articleId){
+	if(isset($articleId)&& $articleId > 0){
+		if(!empty($_POST['auteur']) && !empty($_POST['commentaire'])){
+			if(!preg_match("#[<>1-9]#", $_POST['auteur']) && !preg_match("#[<>]#", $_POST['commentaire'])){
+	
 
-	$confirmCommentAdd = CommentManager::addComment($articleId, $auteur, $comment);
+				
+				$verifArticle = ArticleManager::verifIdArticleExist($articleId);
+	
+				if(empty($verifArticle)){
+					header('Location:index.php');
+				}
+				else{
+					$comment = new CommentManager($articleId);
+					$comment->auteur = htmlentities($_POST['auteur']);
+					$comment->commentaire = htmlentities($_POST['commentaire']);
+
+					
+					$confirmCommentAdd = $comment->addComment();
+					if($confirmCommentAdd === false){
+						throw new Exception ('Impossible d\'ajouter le commentaire!');
+					}
+					else{
+						header('Location: index.php?action=article&id='.$articleId.'&page=1');
+					}
+				}
+			}
+			else{
+				throw new Exception('Rentrer un pseudo et un commentaire valide');
+			}
+		}else{
+			throw new Exception('Tous les champs ne sont pas remplis!');
+		}
+	}else{
+		throw new Exception('Aucun identifiant de billet envoyé');
+	}
+	
+
+	
+	
 
 }
 
 function addSignaleCommentaire($id_commentaire, $id_article){
 
-	$confirmAddSignale = CommentManager::getCommentSignale($id_commentaire, $id_article);
+	if(isset($id_commentaire)&& $id_commentaire > 0 && isset($id_article)&& $id_article>0){
+		$comment = new CommentManager($id_article);
+		$comment->idCommentaire = $id_commentaire;
+		$confirmAddSignale = $comment->getCommentSignale();
+
+		if($confirmAddSignale != 0 || $confirmAddSignale != 1){
+			$comment->addCommentSignale();
+			//CommentManager::addCommentSignale($id_commentaire);
+			header('Location: index.php?action=article&id='.$id_article.'&page=1');
+		}
+		else{
+			throw new Exception('Ce commentaire a déjà été signalé');
+		}
+	}else{
+		throw new Exception('Un id de commentaire ainsi qu\'un id d\'article est requis ou est incorrect');
+	}
+
+	
 
 }
 
@@ -46,102 +140,167 @@ function accueilAdmin(){
 	require('view/frontend/accueilAdminView.php');
 }
 
-function connectAdmin($identifiant, $password){
-	$adminManager = new GestionAdmin($identifiant);
-	
-	$passwordCorrect  = password_verify($password, $adminManager->password);
+function connectAdmin(){
 
-		if($passwordCorrect){
-			header('Location:index.php?action=adminGestionView');
-			$_SESSION['identifiant'] = $identifiant;
-			$_SESSION['id_admin'] = $adminManager->id_admin;
+	if(!empty($_POST['identifiant']) && !empty($_POST['password'])){
+		if(!preg_match("#[<>]#", $_POST['identifiant']) && !preg_match("#[<>]#",$_POST['password'])){
+			$adminManager = new GestionAdmin($_POST['identifiant']);
+	
+			$passwordCorrect  = password_verify($_POST['password'], $adminManager->password);
+
+			if($passwordCorrect){
+				header('Location:index.php?action=adminGestionView');
+				$_SESSION['identifiant'] = $_POST['identifiant'];
+				$_SESSION['id_admin'] = $adminManager->id_admin;
 			
-			
+			}
+			else{
+				throw new Exception('Mot de passe ou identifiant invalide');
+			}
+		}else{
+			throw new Exception('Rentrer un identifiant et un mot de passe valide');
 		}
-		else{
-			throw new Exception('Mot de passe ou identifiant invalide');
-		}
+	}else{
+		throw new Exception('Tous les champs ne sont pas remplis');
+	}
+
+	
 }
 
 
 function afficheGestionAdmin(){
-		
-		$commentsAdmin = GestionAdmin::getCommentsAdmin();
+		if(isset($_SESSION['identifiant'])){
+			$commentsAdmin = GestionAdmin::getCommentsAdmin();
 
 
-		$articlesAdmin = GestionAdmin::getArticlesAdmin();
+			$articlesAdmin = GestionAdmin::getArticlesAdmin();
 
-		require('view/frontend/adminGestionView.php');
+			require('view/frontend/adminGestionView.php');
+		}
 }
 
 
-function verifComment($id_commentaire,$signale){
-
-		if($signale == 1){
-			$verifComment = CommentManager::addCommentVerif($signale, $id_commentaire);
-			header('Location: index.php?action=adminGestionView');
-		}
-		elseif($signale == 0){
-			$supprComment = CommentManager::supprComment($id_commentaire);
-			header('Location: index.php?action=adminGestionView');
+function verifComment($id_commentaire){
+		if($_SESSION['identifiant']){
+			$comment = new CommentManager(null);
+			if(isset($_POST['Valider'])){
+				$comment->signale = 1;
+				$comment->idCommentaire = $id_commentaire;
+				$comment->addCommentVerif();
+				header('Location: index.php?action=adminGestionView');
+			}
+			elseif(isset($_POST['Supprimer'])){
+				$comment->idCommentaire = $id_commentaire;
+				$supprComment = $comment->supprComment();
+				if($supprComment == true){
+					header('Location: index.php?action=adminGestionView');
+				}	
+			}
 		}
 }
 
 function ajoutArticle(){
+	if(isset($_SESSION['identifiant'])){
 		require('view/frontend/ajoutArticleView.php');
+	}
+		
 }
 
 function addArticle(){
+	if(isset($_SESSION['identifiant'])){
+		if(!preg_match("#[<>]#", $_POST['titre'])&& !preg_match("#[<>]#", $_POST['description'])){
+			
 
-	$addArticle = ArticleManager::addArticle();
+			$article = new articleManager(null);
+			$article->titre = $_POST['titre'];
+			$article->descr = $_POST['description'];
+			$article->texte = $_POST['contenu'];
+			$addArticle = $article->addArticle();
+
+			if($addArticle === true){
+				header('Location: index.php');
+			}
+			else{
+				throw new Exception('L\'article n\'a pas pu etre envoyer');
+			}
+
+		}else{
+			throw new Exception('Le titre ou la description n\'est pas valide');
+		}
+	}
+	
 
 }
 
 function modifPassword(){
-
-	require('view/frontend/modifPasswordView.php');
+	if(isset($_SESSION['identifiant'])){
+		require('view/frontend/modifPasswordView.php');
+	}
+	
 }
 
 function verifModifPassword(){
-	$adminManager = new GestionAdmin($_SESSION['identifiant']);
+
+	if(isset($_SESSION['identifiant'])){
+		if(!preg_match("#[<>]#", $_POST['ancienPassword'])&& !preg_match("#[<>]#",$_POST['nouveauPassword']) && !preg_match("#[<>]#",$_POST['nouveauPasswordVerif'])){
+			$adminManager = new GestionAdmin($_SESSION['identifiant']);
 	
 
-	if($_POST['nouveauPassword'] == $_POST['nouveauPasswordVerif']){
-		$password_hache = password_hash($_POST['nouveauPassword'], PASSWORD_DEFAULT);
-		if($_POST['ancienPassowrd'] == $adminManager->password){
-
-			$modifPassword = $adminManager->modifPassowrd($password_hache, $_SESSION['identifiant']);
-			if($modifPassword == true){
-				header('Location: index.php?action=adminGestionView');
-			}
-		}
-		
-		
-		$passwordCorrect  = password_verify($_POST['ancienPassowrd'], $adminManager->password);
-
-		if($passwordCorrect){
-			$modifPassword = $adminManager->modifPassowrd($password_hache, $_SESSION['identifiant']);
-			if($modifPassword == true){
-				header('Location: index.php?action=adminGestionView');
+			if($_POST['nouveauPassword'] == $_POST['nouveauPasswordVerif']){
+				$adminManager->password_hache = password_hash($_POST['nouveauPassword'], PASSWORD_DEFAULT);
+				
+				$passwordCorrect  = password_verify($_POST['ancienPassword'], $adminManager->password);
+				if($passwordCorrect){
+					$adminManager->identifiant = $_SESSION['identifiant'];
+					$modifPassword = $adminManager->modifPassowrd();
+					if($modifPassword == true){
+						header('Location: index.php?action=adminGestionView');
+					}
+				}
 			}	
 		}
-	}	
-}
-function verifArticle(){
-
-	if(isset($_POST['Supprimer'])){
-		$adminManager = ArticleManager::supprArticle();
 	}
-	elseif(isset($_POST['Modifier'])){
+	
+}
+function verifArticle($id_article){
+	if(isset($_SESSION['identifiant'])){
+		if(isset($_POST['Supprimer'])){
+			$adminManager = ArticleManager::supprArticle($id_article);
+			if($adminManager === true) {
+				header('Location:index.php?action=adminGestionView');
+			}	
+			else{
+				throw new Exception('L\'article n\'a pas pu etre supprimer');
+			}
+		}
+		elseif(isset($_POST['Modifier'])){
 
-		$article = new ArticleManager($_GET['id_article']);
+			$article = new ArticleManager($id_article);
+			
 
-		require('view/frontend/modifArticleView.php');
+			require('view/frontend/modifArticleView.php');
+		}
 	}
 }
 
-function modifArticle(){
+function modifArticle($id_article){
+	if(isset($_SESSION['identifiant'])){
+		$article = new ArticleManager($id_article);
+		$article->titre = htmlentities($_POST['titre']);
+		$article->description = htmlentities($_POST['description']);
+		$article->texte = htmlentities($_POST['contenu']);
+		$adminManager = $article->modifArticle();
 
-	$adminManager = ArticleManager::modifArticle();
+		if($adminManager === true){
+			header("Location: index.php");
+		}
+		else{
+			throw new Exception('L\'article n\'a pas pu etre modifier');
+		}
+	}
+	
 }
+
+
+
 

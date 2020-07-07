@@ -11,10 +11,18 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
 <body>
-	<a href='index.php'><i class="home fas fa-home fa-2x"></i></a>
-	<?= $content ?>
-
-
+	<header>
+		<nav>
+			<a href='index.php'><i class="fas fa-home fa-2x"></i></a>
+			<a href='index.php?action=info'><i class="fas fa-info-circle fa-2x"></i></a>
+		</nav>
+	</header>
+	<section>
+		<?= $content ?>
+</section>
+	<footer>
+		<p>© 2020 All rights reserved</p>
+	</footer>
 
 	<?php if(isset($script)){echo $script;}?>
 </body>

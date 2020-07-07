@@ -4,8 +4,8 @@
 <form action='index.php?action=verifModifPassword' method='post'>
 
     <div>
-        <label for="ancienPassowrd">Ancien mot de passe</label><br/>
-        <input type='password' name='ancienPassowrd' ></input>
+        <label for="ancienPassword">Ancien mot de passe</label><br/>
+        <input type='password' name='ancienPassword' ></input>
     </div>
     <div>
         <label for="nouveauPassword">Nouveau mot de passe</label><br/>

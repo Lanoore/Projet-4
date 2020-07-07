@@ -13,7 +13,7 @@
 					<p><?= $article['description']?></p>
 					<p><?= $article['date_creation']?></p>
 
-					<a class='buttonArticle' href="index.php?action=article&id=<?=$article['id']?>">Affichez l'article</a>
+					<a class='buttonArticle' href="index.php?action=article&id=<?=$article['id']?>&page=1">Affichez l'article</a>
 
 				</article>
 				
@@ -25,12 +25,12 @@
 		</section>
 		<div class='paginationArticle'>
 			<?php
-			for($i=1;$i<=$articlesNb[2]; $i++){
-				if($i == $articlesNb[3]){
+			for($i=1;$i<=$articlesTotaux; $i++){
+				if($i == $pageCourante){
 					echo '<span>'.$i.'</span>';
 				}
 				else{
-					echo '<span><a href="index.php?page='.$i.'">'.$i.'</a></span>';
+					echo '<span><a href="index.php?action&page='.$i.'">'.$i.'</a></span>';
 				}
 			}
 			

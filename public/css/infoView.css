@@ -1,0 +1,31 @@
+h3{
+    font-size: 2em;
+}
+
+
+section div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+div p{
+    margin-left: 6%;
+    margin-right: 3%;
+
+    font-size: 1.5em;
+}
+
+div img{
+    margin-right: 6%;
+    margin-left: 3%;
+    margin-bottom: 6%;
+}
+
+
+
+@media all and (max-device-width: 480px){
+    section div{
+        flex-direction: column;
+    }
+    
+}
